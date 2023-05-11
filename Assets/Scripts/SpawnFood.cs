@@ -2,50 +2,72 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SpawnFood : MonoBehaviour {
+public class SpawnFood : MonoBehaviour
+{
+    public GameObject foodPrefab;
+    public Transform borderTop;
+    public Transform borderBottom;
+    public Transform borderLeft;
+    public Transform borderRight;
 
-	// Food Prefab
-	public GameObject foodPrefab;
+    private GameObject currentFood;
 
-	// Borders
-	public Transform borderTop;
-	public Transform borderBottom;
-	public Transform borderLeft;
-	public Transform borderRight;
+    void Start()
+    {
+        Spawn();
+    }
 
-	// Current Food
-	public GameObject currentFood; // <-- Add this
+    public void Spawn()
+    {
+        Spawn(null);
+    }
 
-	// Use this for initialization
-	void Start () {
-		Spawn();
-	}
+    public GameObject Spawn(Snake snake)
+    {
+        int x, y;
+        do
+        {
+            y = (int)Random.Range(borderBottom.position.y, borderTop.position.y);
+            x = (int)Random.Range(borderLeft.position.x, borderRight.position.x);
+        } while (snake != null && snake.CollidesWith(x, y));
 
-	// Spawn food
-	public void Spawn () {
-		Spawn(null);
-	}
+        if (currentFood != null)
+        {
+            Destroy(currentFood);
+        }
 
-	public GameObject Spawn(Snake snake) {
-		int x, y;
-		do {
-			y = (int) Random.Range(borderBottom.position.y, borderTop.position.y);
-			x = (int) Random.Range(borderLeft.position.x, borderRight.position.x);
-		} while(snake != null && snake.collidesWith(x, y));
+        currentFood = Instantiate(foodPrefab, new Vector2(x, y), Quaternion.identity) as GameObject;
 
-		// Save the reference to the current food
-		currentFood = Instantiate(foodPrefab, new Vector2(x, y), Quaternion.identity) as GameObject;
-		return currentFood;
-	}
-	public Vector2 GetFoodPosition()
-	{
-		// Assuming you have a reference to the current food GameObject
-		return currentFood.transform.position;
-	}
+        return currentFood;
+    }
 
-	public void SetFoodPosition(Vector2 oldPosition)
-	{
-		// Assuming you have a reference to the current food GameObject
-		currentFood.transform.position = oldPosition;
-	}
+    public Vector2 GetFoodPosition()
+    {
+        if (currentFood != null)
+        {
+            return currentFood.transform.position;
+        }
+        else
+        {
+            return Vector2.zero;
+        }
+    }
+
+    public void SetFoodPosition(Vector2 oldPosition)
+    {
+        if (currentFood != null)
+        {
+            currentFood.transform.position = oldPosition;
+        }
+    }
+
+    public void SaveFoodPosition()
+    {
+        // Implement saving the food position if desired
+    }
+
+    public void LoadFoodPosition()
+    {
+        // Implement loading the food position if desired
+    }
 }

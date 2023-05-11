@@ -1,105 +1,153 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using UnityEngine.UI;
+using System.Collections.Generic;
 
-public class UIManager : MonoBehaviour {
+public class UIManager : MonoBehaviour
+{
+    Snake snake;
+    GameObject[] pauseObjects;
+    GameObject[] finishObjects;
 
-	Snake snake;
-	GameObject[] pauseObjects;
-	GameObject[] finishObjects;
+    // Use this for initialization
+    void Start()
+    {
+        Time.timeScale = 1;
+        pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
+        finishObjects = GameObject.FindGameObjectsWithTag("ShowOnFinish");
+        HidePaused();
+        HideFinished();
 
-	CommandInvoker commandInvoker;
+        if (SceneManager.GetActiveScene().name == "MainGame")
+        {
+            snake = GameObject.FindGameObjectWithTag("Player").GetComponent<Snake>();
+        }
+    }
 
+    // Update is called once per frame
+    void Update()
+    {
+        // If player is dead, end the game
+        if (Time.timeScale == 1 && snake != null && !snake.IsAlive())
+        {
+            FinishGame();
+        }
 
+        // Use the 'p' button to pause and unpause the game
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePaused();
+        }
 
-	// Use this for initialization
-	void Start () {
-		Time.timeScale = 1;
-		pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
-		finishObjects = GameObject.FindGameObjectsWithTag("ShowOnFinish");
-		hidePaused();
-		hideFinished();
+        // Use the 's' button to save the game
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            SaveGame();
+        }
 
-		if(SceneManager.GetActiveScene().name == "MainGame") {
-			snake = GameObject.FindGameObjectWithTag("Player").GetComponent<Snake>();
-			commandInvoker = GameObject.FindGameObjectWithTag("GameController").GetComponent<CommandInvoker>();
-		}
-	}
+        // Use the 'l' button to load the game
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadGame();
+        }
 
-	// Update is called once per frame
-	void Update () {
-		//if player is dead, end game
-		if (Time.timeScale == 1 && snake != null && !snake.isAlive()) {
-			finishGame();
-		}
+        // Use the 'r' button to rewind the game
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RewindGame();
+        }
+    }
 
-		//uses the 'p' button to pause and unpause the game
-		if (Input.GetKeyDown (KeyCode.Escape)) {
-			togglePaused();
-		}
+    public void TogglePaused()
+    {
+        if (Time.timeScale == 1)
+        {
+            Time.timeScale = 0;
+            ShowPaused();
+        }
+        else if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+            HidePaused();
+        }
+    }
 
-		// Check for 'r' key press to undo last command
-    	if (Input.GetKeyDown(KeyCode.R)) {
-			Debug.Log("R key was pressed.");
-        	CommandInvoker commandInvoker = GameObject.FindGameObjectWithTag("GameController").GetComponent<CommandInvoker>();
-			if (commandInvoker != null) {
-				Debug.Log("CommandInvoker was found.");
-				commandInvoker.Undo();
-			} else {
-				Debug.Log("CommandInvoker was not found.");
-			}
-    	}
-	}
+    public void ShowPaused()
+    {
+        foreach (GameObject gameObject in pauseObjects)
+        {
+            gameObject.SetActive(true);
+        }
+    }
 
-	public void togglePaused() {
-		if (Time.timeScale == 1) {
-			Time.timeScale = 0;
-			showPaused ();
-		} else if(Time.timeScale == 0) {
-			Time.timeScale = 1;
-			hidePaused();
-		}
-	}
+    public void HidePaused()
+    {
+        foreach (GameObject gameObject in pauseObjects)
+        {
+            gameObject.SetActive(false);
+        }
+    }
 
-	public void showPaused() {
-		foreach(GameObject gameObject in pauseObjects) {
-			gameObject.SetActive(true);
-		}
-	}
+    public void FinishGame()
+    {
+        Time.timeScale = 0;
+        ShowFinished();
+    }
 
-	public void hidePaused() {
-		foreach(GameObject gameObject in pauseObjects) {
-			gameObject.SetActive(false);
-		}
-	}
+    public void ShowFinished()
+    {
+        foreach (GameObject gameObject in finishObjects)
+        {
+            gameObject.SetActive(true);
+        }
+    }
 
-	public void finishGame() {
-		Time.timeScale = 0;
-		showFinished();
-	}
+    public void HideFinished()
+    {
+        foreach (GameObject gameObject in finishObjects)
+        {
+            gameObject.SetActive(false);
+        }
+    }
 
-	public void showFinished() {
-		foreach(GameObject gameObject in finishObjects) {
-			gameObject.SetActive(true);
-		}
-	}
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene("MainGame");
+    }
 
-	public void hideFinished() {
-		foreach (GameObject gameObject in finishObjects) {
-			gameObject.SetActive(false);
-		}
-	}
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 
-	public void restartLevel() {
-		SceneManager.LoadScene("MainGame");
-	}
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 
-	public void mainMenu() {
-		SceneManager.LoadScene("MainMenu");
-	}
+    private void SaveGame()
+    {
+        if (snake != null)
+        {
+            snake.SaveGame();
+            Debug.Log("Game Saved!");
+        }
+    }
 
-	public void quitGame() {
-		Application.Quit();
-	}
+    private void LoadGame()
+    {
+        if (snake != null)
+        {
+            snake.LoadGame();
+            Debug.Log("Game Loaded!");
+        }
+    }
+
+    private void RewindGame()
+    {
+        if (snake != null)
+        {
+            snake.Rewind();
+        }
+    }
 }
