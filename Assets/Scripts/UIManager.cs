@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour {
 	Snake snake;
 	GameObject[] pauseObjects;
 	GameObject[] finishObjects;
+	CommandInvoker commandInvoker;
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +19,7 @@ public class UIManager : MonoBehaviour {
 
 		if(SceneManager.GetActiveScene().name == "MainGame") {
 			snake = GameObject.FindGameObjectWithTag("Player").GetComponent<Snake>();
+			commandInvoker = GameObject.FindGameObjectWithTag("GameController").GetComponent<CommandInvoker>();
 		}
 	}
 
@@ -31,6 +33,11 @@ public class UIManager : MonoBehaviour {
 		//uses the 'p' button to pause and unpause the game
 		if (Input.GetKeyDown (KeyCode.Escape)) {
 			togglePaused();
+		}
+
+		//uses the 'r' button to undo the last command
+		if (Time.timeScale == 0 && Input.GetKeyDown(KeyCode.R)) { // <-- Add this
+			commandInvoker.Undo();
 		}
 	}
 

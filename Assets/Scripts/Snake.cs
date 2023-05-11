@@ -49,7 +49,7 @@ public class Snake : MonoBehaviour
     }
 
     // Do movement stuff
-    void Move () 
+    public void Move () 
     {
         // current position
         Vector2 oldPosition = transform.position;
@@ -152,5 +152,14 @@ public class Snake : MonoBehaviour
         }
 
         return collided;
+    }
+    public List<Transform> GetTail()
+    {
+        return tail;
+    }
+
+    public void SetTail(List<Transform> oldTail)
+    {
+        tail = oldTail;
     }
 }

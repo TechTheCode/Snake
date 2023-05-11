@@ -25,4 +25,14 @@ public class PointCounter : MonoBehaviour {
 		score = 0;
 		return oldScore;
 	}
+	public int GetScore()
+	{
+		return score;
+	}
+
+	public void SetScore(int oldScore)
+	{
+		score = oldScore;
+		Update();
+	}
 }
