@@ -30,7 +30,7 @@ public class PointCounter : MonoBehaviour {
 		return score;
 	}
 
-	public void SetScore(int oldScore)
+public void SetScore(int oldScore)
 	{
 		score = oldScore;
 		Update();

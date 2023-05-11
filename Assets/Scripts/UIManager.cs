@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 
 	Snake snake;
 	GameObject[] pauseObjects;
 	GameObject[] finishObjects;
+
 	CommandInvoker commandInvoker;
+
+
 
 	// Use this for initialization
 	void Start () {

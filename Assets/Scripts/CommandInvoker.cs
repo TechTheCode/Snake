@@ -1,10 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-
-public class CommandInvoker
+public class CommandInvoker : MonoBehaviour 
 {
-    private Stack<ICommand> commandHistory = new Stack<ICommand>();
+    Stack<ICommand> commandHistory = new Stack<ICommand>();
 
     public void ExecuteCommand(ICommand command)
     {
@@ -16,8 +15,8 @@ public class CommandInvoker
     {
         if (commandHistory.Count > 0)
         {
-            ICommand commandToUndo = commandHistory.Pop();
-            commandToUndo.Undo();
+            ICommand lastCommand = commandHistory.Pop();
+            lastCommand.Undo();
         }
     }
 }
