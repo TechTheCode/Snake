@@ -13,6 +13,7 @@ public class CommandInvoker : MonoBehaviour
 
     public void Undo()
     {
+        Debug.Log("Undo method was called.");
         if (commandHistory.Count > 0)
         {
             ICommand lastCommand = commandHistory.Pop();

@@ -39,10 +39,17 @@ public class UIManager : MonoBehaviour {
 			togglePaused();
 		}
 
-		//uses the 'r' button to undo the last command
-		if (Time.timeScale == 0 && Input.GetKeyDown(KeyCode.R)) { // <-- Add this
-			commandInvoker.Undo();
-		}
+		// Check for 'r' key press to undo last command
+    	if (Input.GetKeyDown(KeyCode.R)) {
+			Debug.Log("R key was pressed.");
+        	CommandInvoker commandInvoker = GameObject.FindGameObjectWithTag("GameController").GetComponent<CommandInvoker>();
+			if (commandInvoker != null) {
+				Debug.Log("CommandInvoker was found.");
+				commandInvoker.Undo();
+			} else {
+				Debug.Log("CommandInvoker was not found.");
+			}
+    	}
 	}
 
 	public void togglePaused() {
